@@ -304,21 +304,49 @@ c) correct answer (I would use a number for this)
 7. Suppose this code would be a plugin for other programmers to use in their code. So make sure that all your code is private and doesn't interfere with the other programmers code (Hint: we learned a special technique to do exactly that).
 */
 
+/*
+--- Expert level ---
+
+8. After you display the result, display the next random question, so that the game never ends (Hint: write a function for this and call it right after displaying the result)
+
+9. Be careful: after Task 8, the game literally never ends. So include the option to quit the game if the user writes 'exit' instead of the answer. In this case, DON'T call the function from task 8.
+
+10. Track the user's score to make the game more fun! So each time an answer is correct, add 1 point to the score (Hint: I'm going to use the power of closures for this, but you don't have to, just do this with the tools you feel more comfortable at this point).
+
+11. Display the score in the console. Use yet another method for this.
+*/
+
 
 (
 function() {
-    var userAnswer;
-    var random = Math.floor((Math.random() * 3));
+    var userAnswer, score, random;
     var isBabeWeird = new Question("Is my babe weird?", ["Yes, she totally is.", "No, I'm insane, too."], 0);
     var firstProgrammingLanguage = new Question("What is the first programming language Santos learned in detail?", ["Python", "PHP", "JavaScript", "VBA"], 0);
     var favoriteFood = new Question("What is my favorite food?", ["pizza", "tacos", "pad thai", "sweet and sour pork", "dim sum"], 4);
     var questions = [isBabeWeird, firstProgrammingLanguage, favoriteFood];
+    score = 0;
 
     function Question(question, answers, correctAnswer) {
         this.question = question;
         this.answers = answers;
         this.correctAnswer = correctAnswer;
     };
+
+    var playGame = function() {
+        random = Math.floor((Math.random() * 3));
+        questions[random].askQuestion();
+        userAnswer = prompt("Please enter the correct answer here: ");
+        if (userAnswer != "exit") {
+            questions[random].checkAnswer(userAnswer);
+        } else {
+            console.log("Thanks for playing!");
+        }
+    }
+
+    var displayScore = function() {
+        console.log("Your score is: ", score);
+        console.log("------------------------------------------------");
+    }
 
     Question.prototype.askQuestion = function() {
         console.log(this.question);
@@ -330,12 +358,19 @@ function() {
 
     Question.prototype.checkAnswer = function(userAnswer) {
         if (userAnswer == this.correctAnswer) {
-            console.log("You got it! The answer you provided is correct.");
+            console.log("You got it! Keep it up!");
+            score++;
+            displayScore();
+            playGame();
+        } else {
+            console.log("Sorry that was incorrect. Try again =)");
+            displayScore();
+            playGame();
         }
     }
 
-    questions[random].askQuestion();
-    userAnswer = prompt("Please enter the correct answer here: ");
-    questions[random].checkAnswer(userAnswer);
+    playGame();
+    
 }
 )();
+
